@@ -15,8 +15,9 @@ PGPASSWORD=ccdev /opt/postgresql-18/bin/psql -h 127.0.0.1 -U ccdev -d postgres -
   PGPASSWORD=ccdev /opt/postgresql-18/bin/psql -h 127.0.0.1 -U ccdev -d postgres \
   -c "CREATE DATABASE irrigation OWNER ccdev;"
 
-# 3. 写入样例数据（含四类治理场景）
+# 3. 写入样例数据（含四类治理场景 + 计费双时间对账五组样例）
 ../.venv/bin/python -m scripts.seed
+../.venv/bin/python -m scripts.seed_billing
 
 # 4. 启动后端（同时托管 ../frontend/dist 若已构建）
 IRR_WEB_DIST=../frontend/dist exec ../.venv/bin/uvicorn app.main:app \

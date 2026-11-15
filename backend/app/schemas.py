@@ -47,6 +47,8 @@ class ManualRevisionIn(BaseModel):
     operator: str
     received_at: datetime
     supersedes_uid: str | None = None
+    # 人工补录主张的用水归属经营户（计费归属冲突场景）；不影响计量事实，仅供对账候选
+    claimed_operator_code: str | None = None
 
 
 class IngestResult(BaseModel):

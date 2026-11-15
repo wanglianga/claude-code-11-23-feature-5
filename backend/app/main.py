@@ -7,13 +7,15 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import settings
 from .db import Base, engine
-from .routers import auth, contracts, facts, ingestion, master, metrics
+from .routers import auth, contracts, facts, ingestion, master, metrics, billing
 
 # 导入模型以确保元数据注册
 from . import models  # noqa: F401
+from . import models_billing  # noqa: F401
 
-app = FastAPI(title=settings.app_name, version="1.0.0",
-              description="多源用水事实数据与指标发布平台：追加式事实账 + 可回放指标版本")
+app = FastAPI(title=settings.app_name, version="1.1.0",
+              description="多源用水事实数据与指标发布平台 + 用水计费事实双时间对账："
+                          "追加式事实账、可回放指标版本、账期快照与差异桥（不含任何支付/退款动作）")
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,6 +28,7 @@ app.include_router(ingestion.router)
 app.include_router(master.router)
 app.include_router(facts.router)
 app.include_router(metrics.router)
+app.include_router(billing.router)
 
 
 @app.on_event("startup")

@@ -11,11 +11,19 @@ import Quality from "./pages/Quality";
 import Metrics from "./pages/Metrics";
 import Lineage from "./pages/Lineage";
 import Reconciliation from "./pages/Reconciliation";
+import BillingLedger from "./pages/BillingLedger";
+import BillingFragments from "./pages/BillingFragments";
+import BillingControl from "./pages/BillingControl";
+import BillingReview from "./pages/BillingReview";
 
 const NAV = [
   { to: "/", label: "治理总览", ico: "▦", end: true },
   { to: "/metrics", label: "指标版本", ico: "∑" },
   { to: "/facts", label: "供水事实账", ico: "≣" },
+  { to: "/billing/fragments", label: "计费分摊片段", ico: "⌗" },
+  { to: "/billing/review", label: "对账审阅投影", ico: "◈" },
+  { to: "/billing/control", label: "快照·回执·差异桥", ico: "❄" },
+  { to: "/billing/ledger", label: "计费三本账", ico: "▤" },
   { to: "/quality", label: "质量事件与裁定", ico: "⚠" },
   { to: "/reconciliation", label: "对账与重算", ico: "⇄" },
   { to: "/staging", label: "接入暂存区", ico: "⛁" },
@@ -58,6 +66,10 @@ function Shell() {
           <Route path="/metrics" element={<Metrics />} />
           <Route path="/metrics/:id/lineage" element={<Lineage />} />
           <Route path="/facts" element={<Facts />} />
+          <Route path="/billing/fragments" element={<BillingFragments />} />
+          <Route path="/billing/review" element={<BillingReview />} />
+          <Route path="/billing/control" element={<BillingControl />} />
+          <Route path="/billing/ledger" element={<BillingLedger />} />
           <Route path="/quality" element={<Quality />} />
           <Route path="/reconciliation" element={<Reconciliation />} />
           <Route path="/staging" element={<Staging />} />

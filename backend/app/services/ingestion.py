@@ -150,7 +150,9 @@ def ingest_manual(db: Session, data: ManualRevisionIn, batch: str) -> object:
         unit=data.unit,
         basis=data.basis,
         operator=data.operator,
-        payload={"value": data.value, "unit": data.unit, "basis": data.basis},
+        payload={"value": data.value, "unit": data.unit, "basis": data.basis,
+                 **({"claimed_operator_code": data.claimed_operator_code}
+                    if data.claimed_operator_code else {})},
         received_at=data.received_at,
         supersedes_uid=data.supersedes_uid,
     )

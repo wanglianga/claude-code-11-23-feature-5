@@ -205,6 +205,12 @@ def compile_device(db: Session, device_id: str, reading_type: str) -> list[Suppl
         kind = "transfer" if ctx.get("role") == "transfer" else "supply"
         mc = md.meter_change_at(db, device_id, start, end)
         manual = next((r for r in manuals if start <= r.event_time < end), None)
+        # 仅主张用水归属（claimed_operator_code）的人工补录不作为水量证据触发冲突，
+        # 但其证据行挂到事实上，供计费对账识别归属双候选
+        claim_only = bool(manual and (manual.payload or {}).get("claimed_operator_code"))
+        claim_manual_ids = [manual.id] if claim_only else None
+        if claim_only:
+            manual = None
 
         # 缺测区间由质量引擎登记，事实编译继续，不因缺测而停发
         from .quality import check_gap, raise_event
@@ -302,6 +308,7 @@ def compile_device(db: Session, device_id: str, reading_type: str) -> list[Suppl
                            start=start, end=end, value=delta, method="cumulative_delta",
                            reading_start=a["reading"], reading_end=b["reading"],
                            evidence_msg=a["message_ids"] + b["message_ids"],
+                           evidence_man=claim_manual_ids,
                            contract_code=contract, source_version=b["source_version"],
                            is_late=a["is_late"] or b["is_late"])
             produced.append(f)
@@ -317,6 +324,7 @@ def compile_device(db: Session, device_id: str, reading_type: str) -> list[Suppl
                                        value=value, method="flow_integration",
                                        reading_start=a["reading"], reading_end=b["reading"],
                                        evidence_msg=a["message_ids"] + b["message_ids"],
+                                       evidence_man=claim_manual_ids,
                                        contract_code=contract,
                                        source_version=b["source_version"],
                                        is_late=a["is_late"] or b["is_late"]))
